@@ -11,10 +11,11 @@
         body {
             margin: 0;
             text-align: center;
+            overflow: hidden;
         }
 
         #main {
-            margin-top: 22vh;
+            margin-top: 11vh;
             border: none;
             outline: none;
             background-color: transparent;
@@ -33,25 +34,105 @@
             font-size: 70px;
             text-shadow: 0px 0px 2px black;
         }
+
+        #upgrade {
+            font-family: "Poppins";
+            height: 50px;
+            margin-top: 35px;
+            border: 0.5px solid;
+            border-color: rgb(190, 190, 190);
+            outline: none;
+            width: 120px;
+            font-weight: bold;
+            border-radius: 20px;
+            font-size: 20px;
+            padding: 6px;
+            box-shadow: 0px 0px 5px rgb(231, 225, 225);
+            transition-duration: 0.3s;
+        }
+
+        #upgrade span {
+            position: relative;
+            bottom: 45%;
+            font-size: 10px;
+            font-weight: 400;
+        }
+
+        #cpc {
+            font-family: "Poppins";
+            position: relative;
+            bottom: 6vh;
+        }
     </style>
 </head>
 <body>
+    <button id="upgrade">100$<br><span>+1 CPC</span></button>
+    <br>
     <button id="main">🎩</button>
     <h1 id="clicks">0</h1>
+    <h2 id="cpc">1</h2>
     <script>
         const btn = document.getElementById("main");
         const text = document.getElementById("clicks");
+        const upgrade = document.getElementById("upgrade");
+        const clickspc = document.getElementById("cpc");
 
         var clicks = 0;
+        var cost = 100;
         var cpc = 1;
 
+        function com(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        }
+
         function update() {
-            text.innerHTML = clicks;
+            text.innerHTML = com(clicks);
+            upgrade.innerHTML = com(cost) + "$<br><span>+" + com(cost / 100) + " CPC</span>";
+            clickspc.innerHTML = com(cpc);
+
+            if (clicks <= 100) {
+                btn.innerHTML = "🎩";
+            } else if (clicks <= 200) {
+                btn.innerHTML = "🎓";
+            } else if (clicks <= 300) {
+                btn.innerHTML = "⛑";
+            } else if (clicks <= 400) {
+                btn.innerHTML = "👒";
+            }
+
+            if (clicks >= cost) {
+                upgrade.onmouseover = () => {
+                    upgrade.style.backgroundColor = "#36ff46";
+                }
+            } else {
+                upgrade.onmouseover = () => {
+                    upgrade.style.backgroundColor = "rgb(226, 72, 72)";
+                }
+            }
+        }
+
+        upgrade.onmouseleave = () => {
+            upgrade.style.backgroundColor = "";
+        }
+
+        window.onload = () => {
+            update();
         }
 
         btn.addEventListener("click", () => {
             clicks += cpc;
             update();
+        });
+
+        upgrade.addEventListener("click", () => {
+            if (clicks >= cost) {
+                clicks -= cost;
+                cpc += cost / 100;
+
+                cost += cost;
+
+                update();
+            }
         });
     </script>
 </body>
