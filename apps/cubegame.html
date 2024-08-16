@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CubeGame</title>
+    <title>Cube | Mooncreations</title>
 </head>
 <body>
     <script>
@@ -241,7 +241,7 @@
       }
       
       world.perFrame = () => {
-          if (player.y >= innerHeight || player.y < 0) {
+          if (player.y >= innerHeight || player.y <= -50) {
               die();
           }
       
