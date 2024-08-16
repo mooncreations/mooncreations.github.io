@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CubeGame</title>
+</head>
+<body>
+    <script>
+      var _globalScene;
+      
+      class Scene {
+          constructor(background) {
+              this.canvas = document.createElement("canvas");
+              this.canvas.height = innerHeight;
+              this.canvas.width = innerWidth;
+              this.canvas.id = "j2d-canvas-v0.2.2";
+      
+              _globalScene = this;
+      
+              document.body.appendChild(this.canvas);
+              document.body.style.margin = 0;
+              document.body.style.overflow = "hidden";
+      
+              if (background) {
+                  this.background = background;
+                  this.canvas.style.backgroundColor = this.background;
+              }
+      
+              this.ctx = this.canvas.getContext("2d");
+              this.sprites = [];
+              this.customPerFrame = "";
+      
+              this.top = 0;
+              this.bottom = this.canvas.height;
+              this.right = this.canvas.width;
+              this.left = 0;
+              this.hCenter = this.top / 2;
+              this.vCenter = this.right / 2;
+          }
+      
+          draw() {
+              this.canvas.style.backgroundColor = this.background;
+              this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      
+              this.sprites.forEach((sprite) => {
+                  this.ctx.fillStyle = sprite.color;
+                  this.ctx.fillRect(sprite.x, sprite.y, sprite.width, sprite.height);
+              });
+          }
+      
+          perFrame() {}
+      
+          render = (per) => {
+              this.draw();
+      
+              if (per) this.perFrame();
+              eval(this.customPerFrame);
+      
+              requestAnimationFrame(this.render);
+          }
+      }
+      
+      class Sprite {
+          constructor(height, width, x, y, color) {
+              this.height = height;
+              this.width = width;
+              this.x = x;
+              this.y = y;
+              this.color = color;
+              this.scene = _globalScene;
+      
+              if (this.scene == undefined) console.error("J2D Error: No scene has been initialized");
+      
+              this.scene.sprites.push(this);
+          }
+      }
+      
+      class InputModule {
+          keyPressed(key, def) {
+              addEventListener("keydown", (e) => {
+                  if (e.key == key) {
+                      def();
+                  }
+              });
+          }
+      
+          keyUp(key, def) {
+              addEventListener("keyup", (e) => {
+                  if (e.key == key) {
+                      def();
+                  }
+              });
+          }
+      }
+      
+      class RandomModule {
+          pick(min, max) {
+              return Math.random() * (max - min) + min;
+          }
+      }
+      
+      class PhysicsModule {
+          constructor(floor) {
+              this.gravity = 1;
+              this.floor = floor;
+              console.warn("J2D Warning: The physics module is incomplete and has major bugs!");
+          }
+      
+          apply = () => {
+              _globalScene.sprites.forEach((sprite) => {
+                  sprite.vx = 0;
+                  sprite.vy = 0;
+                  sprite.elasticity = 0.7;
+                  sprite.mass = 1;
+                  sprite.anchored = false;
+      
+                  sprite.collisionCheck = function (otherobj) {
+                      sprite.myleft = sprite.x;
+                      sprite.myright = sprite.x + (sprite.width);
+                      sprite.mytop = sprite.y;
+                      sprite.mybottom = sprite.y + (sprite.height);
+                      sprite.otherleft = otherobj.x;
+                      sprite.otherright = otherobj.x + (otherobj.width);
+                      sprite.othertop = otherobj.y;
+                      sprite.otherbottom = otherobj.y + (otherobj.height);
+      
+                      sprite.crash = true;
+      
+                      if ((sprite.mybottom < sprite.othertop) ||
+                          (sprite.mytop > sprite.otherbottom) ||
+                          (sprite.myright < sprite.otherleft) ||
+                          (sprite.myleft > sprite.otherright))
+                      {
+                          sprite.crash = false;
+                      }
+                      return sprite.crash;
+                  }
+      
+                  sprite.usePhysics = () => {
+                      if (!sprite.anchored) {
+                          sprite.x += sprite.vx;
+                          sprite.y += sprite.vy;
+      
+                          if (sprite.y <= this.floor) {
+                              sprite.vy += (sprite.mass / 2) * this.gravity;
+                          } else {
+                              sprite.vy = -sprite.vy * sprite.elasticity;
+                          }
+                      }
+                  }
+              });
+      
+              _globalScene.customPerFrame += "_globalScene.sprites.forEach((sprite) => { sprite.usePhysics(); });";
+          }
+      }
+      
+      class AudioModule {
+          play(file, volume) {
+              let audio = new Audio(file);
+      
+              audio.volume = volume ? volume : 1;
+      
+              audio.play();
+          }
+      }
+      
+      class HttpModule {
+          // Broken
+      
+          constructor() {
+              this.host = new XMLHttpRequest();
+          }
+      
+          request(url) {
+              this.host.onload = () => {
+                  return this.responseText;
+              }
+      
+              this.host.open("GET", url);
+              this.host.send();
+          }
+      }
+      
+      /* MAIN ------------------------------------------------------------------------------------------------------------------------------------- MAIN */
+      
+      const world = new Scene("wheat");
+      const player = new Sprite(70, 70, 0, 0, "darkblue");
+      const physics = new PhysicsModule(innerHeight);
+      const input = new InputModule();
+      
+      var boxes = [
+          new Sprite(70, 120, innerWidth + 120, 0, "red"),
+          new Sprite(70, 120, innerWidth + 120, 0, "Red"),
+          new Sprite(70, 120, innerWidth + 120, 0, "Red")
+      ];
+      
+      physics.apply();
+      
+      boxes.forEach((box) => {
+          box.mass = 0;
+      });
+      
+      player.mass = 0.1;
+      player.y = 0;
+      
+      input.keyPressed("d", () => {
+          player.vx = 5;
+      });
+      
+      input.keyUp("d", () => {
+          player.vx = 0;
+      });
+      
+      input.keyPressed("a", () => {
+          player.vx = -5;
+      });
+      
+      input.keyUp("a", () => {
+          player.vx = 0;
+      });
+      
+      input.keyPressed("w", () => {
+          player.vy += -1;
+      });
+      
+      input.keyPressed("s", () => {
+          player.vy += 1;
+      });
+      
+      const MIN = 2;
+      const MAX = 5;
+      
+      boxes.forEach((box) => {     
+          box.speed = Math.floor(Math.random() + MIN * MAX);
+          box.y = Math.floor(Math.random() * innerHeight);
+      });
+      
+      function die() {
+          document.body.innerHTML = `<h1 style="font-family: 'Segoe UI'; text-align: center; margin-top: 35vh;">You Died! <i style="font-size:8px">CTRL + R to try again</i></h1>`;
+      }
+      
+      world.perFrame = () => {
+          if (player.y >= innerHeight || player.y < 0) {
+              die();
+          }
+      
+          
+          boxes.forEach((box) => {
+              if (box.x >= -130) {
+                  box.x -= box.speed;
+              } else {
+                  box.speed = Math.floor((Math.random() + MIN)  * MAX);
+                  box.x = innerWidth + 130;
+                  box.y = Math.floor(Math.random() * innerHeight);
+              }
+      
+              if (box.collisionCheck(player)) {
+                  die();
+              }
+          });
+      }
+      
+      world.render(true);
+
+    </script>
+</body>
+</html>
