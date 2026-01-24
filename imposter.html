@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imposter Game</title>
+    <style>
+        body {
+            margin: 0;
+            text-align: center;
+            background-color: black;
+        }
+
+        h1 {
+            font-family: "Segoe UI";
+            font-size: 35px;
+            color: white;
+            margin-top: 10%;
+        }
+
+        p {
+            font-family: "Segoe UI";
+            font-size: 20px;
+            color: white;          
+        }
+
+        input {
+            height: 15vh;
+            font-size: 50px;
+            width: 50vw;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        #start {
+            height: 10vh;
+            font-size: 50px;
+            width: 50vw;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 5%;
+            text-align: center;
+        }
+
+        #game {
+            display: none;
+            margin-top: 5vh;
+        }
+
+        #obj {
+            margin-top: 5vh;
+            height: 10vh;
+            width: 60vw;
+            font-size: 40px;
+            text-align: center;
+            padding: 20px;
+            padding-bottom: 20px;
+            border-radius: 10px;
+        }
+
+        #reset {
+            width: 90vw;
+            height: 15vw;
+            background-color: rgb(147, 147, 248);
+            font-size: 40px;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        img {
+            height: 20vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="home">
+        <h1>CR Imposter Game</h1>
+        <img src="./e.png" alt="CR Imposter Game">
+        <p>Programmed by Mr. V</p>
+        <input placeholder="Players" type="number" id="players">
+        <button id="start">Start</button>
+    </div>
+    <div id="game">
+        <button id="reset">Start Game</button>
+    </div>
+    <script>
+        const items = [
+            "Skeletons", "Ice Spirit", "Fire Spirit", "Electro Spirit", "Bomber", "Bats",
+            "Goblins", "Spear Goblins", "Archers", "Knight", "Minions", "Mini P.E.K.K.A",
+            "Musketeer", "Baby Dragon", "Wizard", "Valkyrie", "Prince", "Hog Rider",
+            "Giant", "Giant Skeleton", "P.E.K.K.A", "Royal Giant", "Three Musketeers",
+            "Minion Horde", "Elite Barbarians", "Rascals", "Guards", "Bowler",
+            "Mega Minion", "Flying Machine", "Dart Goblin", "Hunter", "Ice Golem",
+            "Electro Wizard", "Dark Prince", "Bandit", "Night Witch", "Wizard",
+            "Skeleton Barrel", "Skeleton Dragons", "Battle Ram", "Firecracker",
+            "Battle Healer", "Royal Hogs", "Wall Breakers", "Goblin Gang", "Goblin Barrel",
+            "Goblin Cage", "Goblin Drill", "Goblin Giant", "Elixir Golem",
+            "Fisherman", "Magic Archer", "Mega Knight", "Miner", "Lumberjack",
+            "Ice Wizard", "Inferno Dragon", "Electro Dragon", "Sparky", "Graveyard",
+            "Poison", "Fireball", "Freeze", "Lightning", "Rocket", "Earthquake",
+            "Tornado", "Arrows", "Zap", "Giant Snowball", "The Log", "Royal Delivery",
+            "Barbarian Barrel", "Clone", "Mirror", "Rage", "Goblin Curse", "Vines",
+            "Void", "Rune Giant", "Little Prince", "Spirit Empress", "Mighty Miner",
+            "Skeleton King", "Archer Queen", "Golden Knight", "Goblinstein", "Boss Bandit",
+            "Phoenix", "Mother Witch", "Magic Archer", "Ram Rider", "Cannon", "Cannon Cart",
+            "Bomb Tower", "Furnace", "Inferno Tower", "Mortar", "Tesla", "X-Bow",
+            "Barbarian Hut", "Goblin Hut", "Elixir Collector", "Tombstone",
+            "Tower Princess", "Cannoneer", "Dagger Duchess", "Royal Chef",
+            "Suspicious Bush", "Bush Goblins", "Giant Snowball", "Little Prince",
+            "Wall Breakers", "Goblin Demolisher", "Goblin Curse", "Goblin Machine"
+        ];
+
+        var players = 3;
+        var impAmnt = 1;
+        var clicks = 0;
+
+        var start = document.querySelector("#start");
+        var home = document.querySelector("#home");
+        var game = document.querySelector("#game");
+        var input = document.querySelector("#players");
+        var play = document.querySelector("#reset");
+
+        function rand() {
+            let m = items.length;
+            return items[Math.floor(Math.random() * m)];
+        }
+
+        function roll() {
+            var card = rand();
+            var imposter = Math.floor(Math.random() * players);
+            var out = null;
+
+            for (let i = 0; i < players; i++) {
+                if (i != imposter) {
+                    out = card;
+                } else {
+                    out = "Imposter";
+                }
+
+                let b = document.createElement("button");
+                game.appendChild(b);
+                b.id = "obj";
+                b.setAttribute("val", out);
+                b.innerHTML = "Player " + (i+1);
+                b.onclick = () => {
+                    alert(b.getAttribute("val"));
+                    b.disabled = true;
+                    clicks += 1;
+                }
+            }
+        }
+
+        reset.addEventListener("click", () => {
+            if (players == clicks) {
+                alert("Player " + Math.floor(Math.random() * players) + " will start the game");
+                window.location.reload();
+            } else {
+                alert("Every player has to view their card");
+            }
+        });
+
+        start.addEventListener("click", () => {
+            players = input.value;
+            
+            if (players <= 2) {
+                alert("NEED MORE PLAYERS!!!");
+            } else {
+                home.style.display = "none";
+                game.style.display = "block";
+
+                roll();
+            }
+        });
+    </script>
+</body>
+</html>
