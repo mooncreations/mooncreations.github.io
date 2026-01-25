@@ -48,7 +48,7 @@
             margin-top: 5vh;
         }
 
-        #obj {
+        .obj {
             margin-top: 5vh;
             height: 10vh;
             width: 60vw;
@@ -71,6 +71,16 @@
         img {
             height: 20vh;
         }
+
+        select {
+            margin-top: 2vh;
+            height: 10vh;
+            font-size: 30px;
+            width: 80vw;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -79,6 +89,10 @@
         <img src="./e.png" alt="CR Imposter Game">
         <p>Programmed by Mr. V</p>
         <input placeholder="Players" type="number" id="players">
+        <select id="mode">
+            <option value="imposter">Imposter gets Imposter</option>
+            <option value="card">Imposter gets a Card</option>
+        </select>
         <button id="start">Start</button>
     </div>
     <div id="game">
@@ -88,11 +102,12 @@
         const items = [
             "Skeletons", "Ice Spirit", "Fire Spirit", "Electro Spirit", "Bomber", "Bats",
             "Goblins", "Spear Goblins", "Archers", "Knight", "Minions", "Mini P.E.K.K.A",
+            "Heal Spirit", "Witch", "Lava Hound", "Princess", "Executioner", "Barbarians",
             "Musketeer", "Baby Dragon", "Wizard", "Valkyrie", "Prince", "Hog Rider",
             "Giant", "Giant Skeleton", "P.E.K.K.A", "Royal Giant", "Three Musketeers",
             "Minion Horde", "Elite Barbarians", "Rascals", "Guards", "Bowler",
             "Mega Minion", "Flying Machine", "Dart Goblin", "Hunter", "Ice Golem",
-            "Electro Wizard", "Dark Prince", "Bandit", "Night Witch", "Wizard",
+            "Electro Wizard", "Dark Prince", "Bandit", "Night Witch", 
             "Skeleton Barrel", "Skeleton Dragons", "Battle Ram", "Firecracker",
             "Battle Healer", "Royal Hogs", "Wall Breakers", "Goblin Gang", "Goblin Barrel",
             "Goblin Cage", "Goblin Drill", "Goblin Giant", "Elixir Golem",
@@ -103,15 +118,15 @@
             "Barbarian Barrel", "Clone", "Mirror", "Rage", "Goblin Curse", "Vines",
             "Void", "Rune Giant", "Little Prince", "Spirit Empress", "Mighty Miner",
             "Skeleton King", "Archer Queen", "Golden Knight", "Goblinstein", "Boss Bandit",
-            "Phoenix", "Mother Witch", "Magic Archer", "Ram Rider", "Cannon", "Cannon Cart",
+            "Phoenix", "Mother Witch", "Ram Rider", "Cannon", "Cannon Cart",
             "Bomb Tower", "Furnace", "Inferno Tower", "Mortar", "Tesla", "X-Bow",
             "Barbarian Hut", "Goblin Hut", "Elixir Collector", "Tombstone",
             "Tower Princess", "Cannoneer", "Dagger Duchess", "Royal Chef",
-            "Suspicious Bush", "Giant Snowball", "Little Prince", "Electro Giant", "Zappies",
-            "Wall Breakers", "Goblin Demolisher", "Goblin Curse", "Goblin Machine"
+            "Suspicious Bush", "Electro Giant", "Zappies",
+            "Goblin Demolisher", "Goblin Machine"
         ];
 
-        var players = 3;
+        var players = 0;
         var impAmnt = 1;
         var clicks = 0;
         var mode = "card";
@@ -121,6 +136,7 @@
         var game = document.querySelector("#game");
         var input = document.querySelector("#players");
         var play = document.querySelector("#reset");
+        var sel = document.querySelector("#mode");
 
         function rand() {
             let m = items.length;
@@ -131,8 +147,9 @@
             var card = rand();
             var imposter = Math.floor(Math.random() * players +1);
             var out = null;
+            mode = sel.value
 
-            for (let i = 0; i < players; i++) {
+            for (let i = 1; i <= players; i++) {
                 if (i != imposter) {
                     out = card;
                 } else {
@@ -145,9 +162,9 @@
 
                 let b = document.createElement("button");
                 game.appendChild(b);
-                b.id = "obj";
+                b.className = "obj";
                 b.setAttribute("val", out);
-                b.innerHTML = "Player " + (i+1);
+                b.innerHTML = "Player " + (i);
                 b.onclick = () => {
                     alert(b.getAttribute("val"));
                     b.disabled = true;
@@ -156,7 +173,7 @@
             }
         }
 
-        reset.addEventListener("click", () => {
+        play.addEventListener("click", () => {
             if (players == clicks) {
                 alert("Player " + (Math.floor(Math.random() * players) + 1) + " will start the game");
                 window.location.reload();
@@ -166,7 +183,7 @@
         });
 
         start.addEventListener("click", () => {
-            players = input.value;
+            players = Number(input.value);
             
             if (players <= 2) {
                 alert("NEED MORE PLAYERS!!!");
@@ -181,7 +198,3 @@
 </body>
 
 </html>
-
-
-
-
