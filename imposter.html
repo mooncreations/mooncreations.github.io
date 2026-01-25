@@ -153,7 +153,7 @@
 
         reset.addEventListener("click", () => {
             if (players == clicks) {
-                alert("Player " + Math.floor(Math.random() * players) + 1 + " will start the game");
+                alert("Player " + (Math.floor(Math.random() * players) + 1) + " will start the game");
                 window.location.reload();
             } else {
                 alert("Every player has to view their card");
@@ -176,5 +176,6 @@
 </body>
 
 </html>
+
 
 
