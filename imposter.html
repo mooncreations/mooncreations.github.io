@@ -114,6 +114,7 @@
         var players = 3;
         var impAmnt = 1;
         var clicks = 0;
+        var mode = "card";
 
         var start = document.querySelector("#start");
         var home = document.querySelector("#home");
@@ -128,14 +129,18 @@
 
         function roll() {
             var card = rand();
-            var imposter = Math.floor(Math.random() * players);
+            var imposter = Math.floor(Math.random() * players +1);
             var out = null;
 
             for (let i = 0; i < players; i++) {
                 if (i != imposter) {
                     out = card;
                 } else {
-                    out = rand();
+                    if (mode == "imposter") {
+                        out = "Imposter";
+                    } else {
+                        out = rand();
+                    }
                 }
 
                 let b = document.createElement("button");
@@ -176,6 +181,7 @@
 </body>
 
 </html>
+
 
 
 
