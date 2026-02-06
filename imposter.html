@@ -161,12 +161,17 @@
                 cPlayers.push(i);
             }
 
-            for (let i = 1; i <= impAmnt; i++) {
-                let chosen = Math.floor(Math.random() * cPlayers.length +1);
-
+            console.log(cPlayers);
+            for (let i = 0; i < impAmnt; i++) {
+                let chosen = cPlayers[Math.floor(Math.random() * cPlayers.length)];
+                
                 imposters.push(chosen);
                 cPlayers.splice(cPlayers.indexOf(chosen), 1);
+
+                console.log(chosen + " was chosen and is removed from the list: " + cPlayers);
             }
+
+            console.log(imposters);
 
             for (let i = 1; i <= players; i++) {
                 if (!imposters.includes(i)) {
