@@ -85,7 +85,7 @@
 </head>
 <body>
     <div id="home">
-        <h1>(Imposter Amount is not working yet)</h1> <!-- CR Imposter Gam -->
+        <h1>CR Imposter Game!</h1> 
         <img src="./e.png" alt="CR Imposter Game">
         <p>Programmed by Mr. V</p>
         <input placeholder="Players" type="number" id="players">
@@ -128,7 +128,6 @@
         ];
 
         var players = 0;
-        var impAmnt = 1;
         var clicks = 0;
         var mode = "card";
 
@@ -136,6 +135,7 @@
         var home = document.querySelector("#home");
         var game = document.querySelector("#game");
         var input = document.querySelector("#players");
+        var imps = document.querySelector("#imposters");
         var play = document.querySelector("#reset");
         var sel = document.querySelector("#mode");
 
@@ -146,12 +146,30 @@
 
         function roll() {
             var card = rand();
-            var imposter = Math.floor(Math.random() * players +1);
+            var imposters = [];
+            var cPlayers = [];
+            var impAmnt = Number(imps.value);
             var out = null;
             mode = sel.value
 
+            if (impAmnt >= players) {
+                alert("Too Many Imposters!!");
+                window.location.reload()
+            }
+
             for (let i = 1; i <= players; i++) {
-                if (i != imposter) {
+                cPlayers.push(i);
+            }
+
+            for (let i = 1; i <= impAmnt; i++) {
+                let chosen = Math.floor(Math.random() * cPlayers.length +1);
+
+                imposters.push(chosen);
+                cPlayers.splice(cPlayers.indexOf(chosen), 1);
+            }
+
+            for (let i = 1; i <= players; i++) {
+                if (!imposters.includes(i)) {
                     out = card;
                 } else {
                     if (mode == "imposter") {
